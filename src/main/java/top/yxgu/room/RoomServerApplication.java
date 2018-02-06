@@ -3,8 +3,6 @@ package top.yxgu.room;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,24 +36,28 @@ public class RoomServerApplication {
 			return ;
 		}
 		
-		try {
-			System.out.println( InetAddress.getLocalHost().getHostAddress() );
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		new Thread() {
 			@Override
 	        public void run() {
-				roomServer.run();
+				webSocketServer.run();
 			}
 		}.start();
 		
 		new Thread() {
 			@Override
 	        public void run() {
-				webSocketServer.run();
+				while (true) {
+					if (webSocketServer.isRunning) {
+						roomServer.run();
+						return;
+					} else {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 		}.start();
 	}

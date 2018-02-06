@@ -29,6 +29,8 @@ public class WebSocketServer {
     private static final Logger log = LoggerFactory.getLogger(WebSocketServer.class);
     private EventLoopGroup bossGroup;
     private EventLoopGroup workGroup;
+    
+    public boolean isRunning = false;
 	
 	public void run() {
 		bossGroup = new NioEventLoopGroup(2);
@@ -41,17 +43,21 @@ public class WebSocketServer {
 					.childHandler(webSocketServerInitializer);
 
 			Channel ch = server.bind(port).sync().channel();
+			isRunning = true;
 			log.info("WebSocket Server started, Connect by " + (isSsl? "wss" : "ws") + "://hostname:" + port + this.websocketPath);
 			ch.closeFuture().sync();
 		} catch (InterruptedException e) {
+			isRunning = false;
 			e.printStackTrace();
 		} finally {
+			isRunning = false;
 			bossGroup.shutdownGracefully();
 			workGroup.shutdownGracefully();
 		}
 	}
 	
 	public void stop(String reason) {
+		isRunning = false;
 		log.info("Stop WebSocket Server["+port+"]："+reason);
 		bossGroup.shutdownGracefully();
 		workGroup.shutdownGracefully();

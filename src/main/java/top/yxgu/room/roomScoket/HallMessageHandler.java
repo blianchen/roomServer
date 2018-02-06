@@ -2,6 +2,7 @@ package top.yxgu.room.roomScoket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
@@ -9,6 +10,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import top.yxgu.room.model.RoomData;
+import top.yxgu.room.service.RoomService;
 
 @Controller
 @Sharable
@@ -22,6 +25,9 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	private int port;
 	@Value("${room.server.maxRoomNum}")
 	private int maxRoomNum;
+	
+	@Autowired
+	private RoomService roomService;
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -38,6 +44,33 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
+		int action = msg.readShort();
+		switch (action) {
+			case RoomMessageDefine.REGISTER_RES: {
+				
+				break;
+			}
+			case RoomMessageDefine.REQUEST_ROOM_REQ: {
+				int userId = msg.readInt();
+				int type = msg.readInt();
+				RoomData room = roomService.selectOrCreate(type);
+				
+				if (room == null) {
+					//TODO 发送重新获取房间消息
+				} else {
+					 ByteBuf sndMsg = ctx.alloc().buffer();
+					 sndMsg.writeShort(RoomMessageDefine.REQUEST_ROOM_RES);
+					 sndMsg.writeInt(userId);
+					 sndMsg.writeInt(type);
+					 sndMsg.writeInt(room.id);
+					 ctx.writeAndFlush(msg);
+				}
+				break;
+			}
+			default: {
+				log.warn("Unkonw RoomMessage action:"+action);
+			}
+		}
 	}
 	
 	 @Override
