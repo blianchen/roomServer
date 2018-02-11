@@ -32007,15 +32007,15 @@ public final class MsgOuterClass {
     int getPathId();
 
     /**
-     * <code>repeated uint32 uniId = 4;</code>
+     * <code>repeated uint32 uniId = 4 [packed = false];</code>
      */
     java.util.List<java.lang.Integer> getUniIdList();
     /**
-     * <code>repeated uint32 uniId = 4;</code>
+     * <code>repeated uint32 uniId = 4 [packed = false];</code>
      */
     int getUniIdCount();
     /**
-     * <code>repeated uint32 uniId = 4;</code>
+     * <code>repeated uint32 uniId = 4 [packed = false];</code>
      */
     int getUniId(int index);
 
@@ -32204,25 +32204,24 @@ public final class MsgOuterClass {
     public static final int UNIID_FIELD_NUMBER = 4;
     private java.util.List<java.lang.Integer> uniId_;
     /**
-     * <code>repeated uint32 uniId = 4;</code>
+     * <code>repeated uint32 uniId = 4 [packed = false];</code>
      */
     public java.util.List<java.lang.Integer>
         getUniIdList() {
       return uniId_;
     }
     /**
-     * <code>repeated uint32 uniId = 4;</code>
+     * <code>repeated uint32 uniId = 4 [packed = false];</code>
      */
     public int getUniIdCount() {
       return uniId_.size();
     }
     /**
-     * <code>repeated uint32 uniId = 4;</code>
+     * <code>repeated uint32 uniId = 4 [packed = false];</code>
      */
     public int getUniId(int index) {
       return uniId_.get(index);
     }
-    private int uniIdMemoizedSerializedSize = -1;
 
     public static final int COORDINATE_FIELD_NUMBER = 5;
     private App.Model.Net.MsgOuterClass.Coordinate coordinate_;
@@ -32270,7 +32269,6 @@ public final class MsgOuterClass {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      getSerializedSize();
       if (type_ != 0) {
         output.writeUInt32(1, type_);
       }
@@ -32280,12 +32278,8 @@ public final class MsgOuterClass {
       if (pathId_ != 0) {
         output.writeUInt32(3, pathId_);
       }
-      if (getUniIdList().size() > 0) {
-        output.writeUInt32NoTag(34);
-        output.writeUInt32NoTag(uniIdMemoizedSerializedSize);
-      }
       for (int i = 0; i < uniId_.size(); i++) {
-        output.writeUInt32NoTag(uniId_.get(i));
+        output.writeUInt32(4, uniId_.get(i));
       }
       if (coordinate_ != null) {
         output.writeMessage(5, getCoordinate());
@@ -32320,12 +32314,7 @@ public final class MsgOuterClass {
             .computeUInt32SizeNoTag(uniId_.get(i));
         }
         size += dataSize;
-        if (!getUniIdList().isEmpty()) {
-          size += 1;
-          size += com.google.protobuf.CodedOutputStream
-              .computeInt32SizeNoTag(dataSize);
-        }
-        uniIdMemoizedSerializedSize = dataSize;
+        size += 1 * getUniIdList().size();
       }
       if (coordinate_ != null) {
         size += com.google.protobuf.CodedOutputStream
@@ -32757,26 +32746,26 @@ public final class MsgOuterClass {
          }
       }
       /**
-       * <code>repeated uint32 uniId = 4;</code>
+       * <code>repeated uint32 uniId = 4 [packed = false];</code>
        */
       public java.util.List<java.lang.Integer>
           getUniIdList() {
         return java.util.Collections.unmodifiableList(uniId_);
       }
       /**
-       * <code>repeated uint32 uniId = 4;</code>
+       * <code>repeated uint32 uniId = 4 [packed = false];</code>
        */
       public int getUniIdCount() {
         return uniId_.size();
       }
       /**
-       * <code>repeated uint32 uniId = 4;</code>
+       * <code>repeated uint32 uniId = 4 [packed = false];</code>
        */
       public int getUniId(int index) {
         return uniId_.get(index);
       }
       /**
-       * <code>repeated uint32 uniId = 4;</code>
+       * <code>repeated uint32 uniId = 4 [packed = false];</code>
        */
       public Builder setUniId(
           int index, int value) {
@@ -32786,7 +32775,7 @@ public final class MsgOuterClass {
         return this;
       }
       /**
-       * <code>repeated uint32 uniId = 4;</code>
+       * <code>repeated uint32 uniId = 4 [packed = false];</code>
        */
       public Builder addUniId(int value) {
         ensureUniIdIsMutable();
@@ -32795,7 +32784,7 @@ public final class MsgOuterClass {
         return this;
       }
       /**
-       * <code>repeated uint32 uniId = 4;</code>
+       * <code>repeated uint32 uniId = 4 [packed = false];</code>
        */
       public Builder addAllUniId(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -32806,7 +32795,7 @@ public final class MsgOuterClass {
         return this;
       }
       /**
-       * <code>repeated uint32 uniId = 4;</code>
+       * <code>repeated uint32 uniId = 4 [packed = false];</code>
        */
       public Builder clearUniId() {
         uniId_ = java.util.Collections.emptyList();
@@ -56585,70 +56574,70 @@ public final class MsgOuterClass {
       ".Model.Net.FishingHitRes\"9\n\007GetItem\022\016\n\006i" +
       "temId\030\001 \001(\r\022\r\n\005count\030\002 \001(\r\022\017\n\007expried\030\003 " +
       "\001(\005\"4\n\nPondFishes\022&\n\006fishes\030\001 \003(\0132\026.App." +
-      "Model.Net.AddFish\"\210\001\n\007AddFish\022\014\n\004type\030\001 " +
-      "\001(\r\022\016\n\006fishId\030\002 \001(\r\022\016\n\006pathId\030\003 \001(\r\022\r\n\005u" +
-      "niId\030\004 \003(\r\022-\n\ncoordinate\030\005 \001(\0132\031.App.Mod" +
-      "el.Net.Coordinate\022\021\n\taliveTime\030\006 \001(\r\",\n\n" +
-      "Coordinate\022\016\n\006xvalue\030\001 \001(\005\022\016\n\006yvalue\030\002 \001" +
-      "(\005\"9\n\tPondState\022\014\n\004type\030\001 \001(\r\022\016\n\006fishId\030" +
-      "\002 \001(\r\022\016\n\006userId\030\003 \001(\r\"I\n\025GunFishPosInfoM" +
-      "essage\0220\n\014fishPostList\030\001 \003(\0132\032.App.Model" +
-      ".Net.FishPosInfo\";\n\013FishPosInfo\022\017\n\007group" +
-      "Id\030\001 \001(\r\022\016\n\006fishId\030\002 \003(\r\022\013\n\003pos\030\003 \001(\r\"\034\n" +
-      "\nUseItemReq\022\016\n\006itemId\030\001 \001(\r\"{\n\nUseItemRe" +
-      "s\022\016\n\006userId\030\001 \001(\r\022\016\n\006itemId\030\002 \001(\r\022\'\n\007add" +
-      "Fish\030\003 \001(\0132\026.App.Model.Net.AddFish\022\r\n\005st" +
-      "ate\030\004 \001(\r\022\025\n\rfrozenFishIds\030\005 \003(\r\"A\n\014Chan" +
-      "geGunReq\022\014\n\004type\030\001 \001(\r\022\016\n\006skinId\030\002 \001(\r\022\023" +
-      "\n\013changeValue\030\003 \001(\r\"i\n\014ChangeGunRes\022\016\n\006u" +
-      "serId\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\r\n\005gunId\030\003 \001(\r" +
-      "\022\016\n\006skinId\030\004 \001(\r\022\r\n\005state\030\005 \001(\r\022\r\n\005power" +
-      "\030\006 \001(\r\".\n\rUseWarheadReq\022\016\n\006itemId\030\001 \001(\r\022" +
-      "\r\n\005uniId\030\002 \001(\r\"@\n\rUseWarheadRes\022\016\n\006userI" +
-      "d\030\001 \001(\r\022\r\n\005uniId\030\002 \001(\r\022\020\n\010addCoins\030\003 \001(\r" +
-      "\"O\n\013UseLockItem\022\016\n\006itemId\030\001 \001(\r\022\016\n\006fishI" +
-      "d\030\002 \001(\r\022\016\n\006userId\030\003 \001(\r\022\020\n\010gunIndex\030\004 \001(" +
-      "\r\"-\n\013LockItemEnd\022\016\n\006itemId\030\001 \001(\r\022\016\n\006user" +
-      "Id\030\002 \001(\r\",\n\010QuitRoom\022\020\n\010position\030\001 \001(\r\022\016" +
-      "\n\006userId\030\002 \001(\r\"\211\001\n\024MajorParameterChange\022" +
-      "\016\n\006userId\030\001 \001(\r\022\r\n\005coins\030\002 \001(\004\022\014\n\004gems\030\003" +
-      " \001(\r\022\r\n\005level\030\004 \001(\r\022%\n\004item\030\005 \003(\0132\027.App." +
-      "Model.Net.ItemInfo\022\016\n\006coupon\030\006 \001(\r\"O\n\010Ba" +
-      "nkrupt\022\r\n\005state\030\001 \001(\r\022\025\n\rcanReliefTime\030\002" +
-      " \001(\r\022\r\n\005coins\030\003 \001(\r\022\016\n\006userId\030\004 \001(\r\"\034\n\nS" +
-      "hopBuyReq\022\016\n\006shopId\030\001 \001(\r\"\033\n\nShopBuyRes\022" +
-      "\r\n\005state\030\001 \001(\r\"\035\n\013FindUserReq\022\016\n\006userId\030" +
-      "\001 \001(\r\"5\n\013FindUserRes\022\r\n\005state\030\001 \001(\r\022\027\n\017r" +
-      "eceiveUserName\030\002 \001(\t\"O\n\013GiveItemReq\022\025\n\rr" +
-      "eceiveUserId\030\002 \001(\r\022)\n\010giveItem\030\003 \001(\0132\027.A" +
-      "pp.Model.Net.ItemInfo\"\034\n\013GiveItemRes\022\r\n\005" +
-      "state\030\001 \001(\r\";\n\tItemProto\022\016\n\006itemId\030\001 \001(\r" +
-      "\022\r\n\005count\030\002 \001(\r\022\017\n\007expried\030\003 \001(\005\"!\n\021Upgr" +
-      "adeOrForgeReq\022\014\n\004type\030\001 \001(\r\"\201\001\n\021UpgradeO" +
-      "rForgeRes\022\r\n\005state\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\016" +
-      "\n\006userId\030\003 \001(\r\022\022\n\nafterGunId\030\004 \001(\r\022+\n\tit" +
-      "emProto\030\005 \001(\0132\030.App.Model.Net.ItemProto\"" +
-      "\230\001\n\017RankDataMessage\022\020\n\010rankType\030\001 \001(\005\022\014\n" +
-      "\004rank\030\002 \001(\005\022\016\n\006userId\030\003 \001(\005\022\021\n\troleLevel" +
-      "\030\004 \001(\005\022\020\n\010vipLevel\030\005 \001(\005\022\021\n\trankValue\030\006 " +
-      "\001(\003\022\014\n\004name\030\007 \001(\t\022\017\n\007iconUrl\030\010 \001(\t\"\"\n\016Ge" +
-      "tRankDataReq\022\020\n\010rankType\030\001 \001(\005\"B\n\016GetRan" +
-      "kDataRes\0220\n\010ranklist\030\001 \003(\0132\036.App.Model.N" +
-      "et.RankDataMessage\"\260\001\n\rWorldBossInfo\022\016\n\006" +
-      "bossId\030\001 \001(\r\022\016\n\006fishId\030\002 \001(\r\022\r\n\005state\030\003 " +
-      "\001(\r\022\014\n\004time\030\004 \001(\r\022\021\n\tshieldMax\030\005 \001(\r\022\026\n\016" +
-      "curShieldValue\030\006 \001(\r\022\016\n\006userId\030\007 \001(\r\022\'\n\005" +
-      "items\030\010 \003(\0132\030.App.Model.Net.ItemProto\"\036\n" +
-      "\016DrawLotteryReq\022\014\n\004gear\030\001 \001(\r\"B\n\016DrawLot" +
-      "teryRes\022\016\n\006userId\030\001 \001(\r\022\r\n\005state\030\002 \001(\r\022\021" +
-      "\n\titemIndex\030\003 \001(\r\"V\n\031LotteryConditonAccu" +
-      "mulate\022\020\n\010integral\030\001 \001(\r\022\017\n\007killNum\030\002 \001(" +
-      "\r\022\026\n\016todayDrawTimes\030\003 \001(\r\"V\n\nFishingHit\022" +
-      "\016\n\006userId\030\001 \001(\r\022\016\n\006fishId\030\002 \001(\r\022(\n\010getIt" +
-      "ems\030\003 \003(\0132\026.App.Model.Net.GetItem\"=\n\016Use" +
-      "rBalanceRes\022\016\n\006userId\030\001 \001(\r\022\r\n\005coins\030\002 \001" +
-      "(\004\022\014\n\004gems\030\003 \001(\r\"#\n\023FishingUnlockStatus\022" +
-      "\014\n\004type\030\001 \001(\rb\006proto3"
+      "Model.Net.AddFish\"\214\001\n\007AddFish\022\014\n\004type\030\001 " +
+      "\001(\r\022\016\n\006fishId\030\002 \001(\r\022\016\n\006pathId\030\003 \001(\r\022\021\n\005u" +
+      "niId\030\004 \003(\rB\002\020\000\022-\n\ncoordinate\030\005 \001(\0132\031.App" +
+      ".Model.Net.Coordinate\022\021\n\taliveTime\030\006 \001(\r" +
+      "\",\n\nCoordinate\022\016\n\006xvalue\030\001 \001(\005\022\016\n\006yvalue" +
+      "\030\002 \001(\005\"9\n\tPondState\022\014\n\004type\030\001 \001(\r\022\016\n\006fis" +
+      "hId\030\002 \001(\r\022\016\n\006userId\030\003 \001(\r\"I\n\025GunFishPosI" +
+      "nfoMessage\0220\n\014fishPostList\030\001 \003(\0132\032.App.M" +
+      "odel.Net.FishPosInfo\";\n\013FishPosInfo\022\017\n\007g" +
+      "roupId\030\001 \001(\r\022\016\n\006fishId\030\002 \003(\r\022\013\n\003pos\030\003 \001(" +
+      "\r\"\034\n\nUseItemReq\022\016\n\006itemId\030\001 \001(\r\"{\n\nUseIt" +
+      "emRes\022\016\n\006userId\030\001 \001(\r\022\016\n\006itemId\030\002 \001(\r\022\'\n" +
+      "\007addFish\030\003 \001(\0132\026.App.Model.Net.AddFish\022\r" +
+      "\n\005state\030\004 \001(\r\022\025\n\rfrozenFishIds\030\005 \003(\r\"A\n\014" +
+      "ChangeGunReq\022\014\n\004type\030\001 \001(\r\022\016\n\006skinId\030\002 \001" +
+      "(\r\022\023\n\013changeValue\030\003 \001(\r\"i\n\014ChangeGunRes\022" +
+      "\016\n\006userId\030\001 \001(\r\022\014\n\004type\030\002 \001(\r\022\r\n\005gunId\030\003" +
+      " \001(\r\022\016\n\006skinId\030\004 \001(\r\022\r\n\005state\030\005 \001(\r\022\r\n\005p" +
+      "ower\030\006 \001(\r\".\n\rUseWarheadReq\022\016\n\006itemId\030\001 " +
+      "\001(\r\022\r\n\005uniId\030\002 \001(\r\"@\n\rUseWarheadRes\022\016\n\006u" +
+      "serId\030\001 \001(\r\022\r\n\005uniId\030\002 \001(\r\022\020\n\010addCoins\030\003" +
+      " \001(\r\"O\n\013UseLockItem\022\016\n\006itemId\030\001 \001(\r\022\016\n\006f" +
+      "ishId\030\002 \001(\r\022\016\n\006userId\030\003 \001(\r\022\020\n\010gunIndex\030" +
+      "\004 \001(\r\"-\n\013LockItemEnd\022\016\n\006itemId\030\001 \001(\r\022\016\n\006" +
+      "userId\030\002 \001(\r\",\n\010QuitRoom\022\020\n\010position\030\001 \001" +
+      "(\r\022\016\n\006userId\030\002 \001(\r\"\211\001\n\024MajorParameterCha" +
+      "nge\022\016\n\006userId\030\001 \001(\r\022\r\n\005coins\030\002 \001(\004\022\014\n\004ge" +
+      "ms\030\003 \001(\r\022\r\n\005level\030\004 \001(\r\022%\n\004item\030\005 \003(\0132\027." +
+      "App.Model.Net.ItemInfo\022\016\n\006coupon\030\006 \001(\r\"O" +
+      "\n\010Bankrupt\022\r\n\005state\030\001 \001(\r\022\025\n\rcanReliefTi" +
+      "me\030\002 \001(\r\022\r\n\005coins\030\003 \001(\r\022\016\n\006userId\030\004 \001(\r\"" +
+      "\034\n\nShopBuyReq\022\016\n\006shopId\030\001 \001(\r\"\033\n\nShopBuy" +
+      "Res\022\r\n\005state\030\001 \001(\r\"\035\n\013FindUserReq\022\016\n\006use" +
+      "rId\030\001 \001(\r\"5\n\013FindUserRes\022\r\n\005state\030\001 \001(\r\022" +
+      "\027\n\017receiveUserName\030\002 \001(\t\"O\n\013GiveItemReq\022" +
+      "\025\n\rreceiveUserId\030\002 \001(\r\022)\n\010giveItem\030\003 \001(\013" +
+      "2\027.App.Model.Net.ItemInfo\"\034\n\013GiveItemRes" +
+      "\022\r\n\005state\030\001 \001(\r\";\n\tItemProto\022\016\n\006itemId\030\001" +
+      " \001(\r\022\r\n\005count\030\002 \001(\r\022\017\n\007expried\030\003 \001(\005\"!\n\021" +
+      "UpgradeOrForgeReq\022\014\n\004type\030\001 \001(\r\"\201\001\n\021Upgr" +
+      "adeOrForgeRes\022\r\n\005state\030\001 \001(\r\022\014\n\004type\030\002 \001" +
+      "(\r\022\016\n\006userId\030\003 \001(\r\022\022\n\nafterGunId\030\004 \001(\r\022+" +
+      "\n\titemProto\030\005 \001(\0132\030.App.Model.Net.ItemPr" +
+      "oto\"\230\001\n\017RankDataMessage\022\020\n\010rankType\030\001 \001(" +
+      "\005\022\014\n\004rank\030\002 \001(\005\022\016\n\006userId\030\003 \001(\005\022\021\n\troleL" +
+      "evel\030\004 \001(\005\022\020\n\010vipLevel\030\005 \001(\005\022\021\n\trankValu" +
+      "e\030\006 \001(\003\022\014\n\004name\030\007 \001(\t\022\017\n\007iconUrl\030\010 \001(\t\"\"" +
+      "\n\016GetRankDataReq\022\020\n\010rankType\030\001 \001(\005\"B\n\016Ge" +
+      "tRankDataRes\0220\n\010ranklist\030\001 \003(\0132\036.App.Mod" +
+      "el.Net.RankDataMessage\"\260\001\n\rWorldBossInfo" +
+      "\022\016\n\006bossId\030\001 \001(\r\022\016\n\006fishId\030\002 \001(\r\022\r\n\005stat" +
+      "e\030\003 \001(\r\022\014\n\004time\030\004 \001(\r\022\021\n\tshieldMax\030\005 \001(\r" +
+      "\022\026\n\016curShieldValue\030\006 \001(\r\022\016\n\006userId\030\007 \001(\r" +
+      "\022\'\n\005items\030\010 \003(\0132\030.App.Model.Net.ItemProt" +
+      "o\"\036\n\016DrawLotteryReq\022\014\n\004gear\030\001 \001(\r\"B\n\016Dra" +
+      "wLotteryRes\022\016\n\006userId\030\001 \001(\r\022\r\n\005state\030\002 \001" +
+      "(\r\022\021\n\titemIndex\030\003 \001(\r\"V\n\031LotteryConditon" +
+      "Accumulate\022\020\n\010integral\030\001 \001(\r\022\017\n\007killNum\030" +
+      "\002 \001(\r\022\026\n\016todayDrawTimes\030\003 \001(\r\"V\n\nFishing" +
+      "Hit\022\016\n\006userId\030\001 \001(\r\022\016\n\006fishId\030\002 \001(\r\022(\n\010g" +
+      "etItems\030\003 \003(\0132\026.App.Model.Net.GetItem\"=\n" +
+      "\016UserBalanceRes\022\016\n\006userId\030\001 \001(\r\022\r\n\005coins" +
+      "\030\002 \001(\004\022\014\n\004gems\030\003 \001(\r\"#\n\023FishingUnlockSta" +
+      "tus\022\014\n\004type\030\001 \001(\rb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

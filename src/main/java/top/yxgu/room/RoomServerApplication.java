@@ -10,8 +10,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import top.yxgu.room.model.RoomManager;
+import top.yxgu.room.model.UserManager;
 import top.yxgu.room.roomScoket.RoomSocketClient;
-import top.yxgu.room.webSocket.ChannelManager;
+import top.yxgu.room.service.TimeScheduledService;
 import top.yxgu.room.webSocket.WebSocketServer;
 import top.yxgu.utils.OSInfo;
 
@@ -23,7 +25,7 @@ public class RoomServerApplication {
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(RoomServerApplication.class);
 		ApplicationContext ctx = app.run(args);
-		
+
 		runService(ctx);
 		cmd(ctx);
 	}
@@ -31,6 +33,7 @@ public class RoomServerApplication {
 	private static void runService(ApplicationContext ctx) {
 		RoomSocketClient roomServer = (RoomSocketClient)ctx.getBean(RoomSocketClient.class);
 		WebSocketServer webSocketServer = (WebSocketServer)ctx.getBean(WebSocketServer.class);
+		TimeScheduledService timeScheduledService = (TimeScheduledService)ctx.getBean(TimeScheduledService.class);
 		if (roomServer == null || webSocketServer == null) {
 			logger.error("服务器启动出错");
 			return ;
@@ -48,7 +51,9 @@ public class RoomServerApplication {
 	        public void run() {
 				while (true) {
 					if (webSocketServer.isRunning) {
-						roomServer.run();
+						roomServer.init();
+						roomServer.connect();
+						timeScheduledService.start();
 						return;
 					} else {
 						try {
@@ -91,12 +96,13 @@ public class RoomServerApplication {
 //					as.killAllProcess();
 				} else if ("inf".equals(scmd)) {
 					System.out.println("yxgu>	System Information:");
-					System.out.println("                               OS:	"+ OSInfo.getOSArch() + "  " + OSInfo.getOSName() + " V" + OSInfo.getOSVersion());
-					System.out.println("                     CPU Core Num:	"+ OSInfo.getProcessorNum());
-					System.out.println("                 Total JVM Memory:	"+ OSInfo.getJVMTotalMemorySize() + "M");
-					System.out.println("                  Free JVM Memory:	"+ OSInfo.getJVMFreeMemorySize() + "M");
-					System.out.println("                  Online User Num:	"+ ChannelManager.size());
-//					System.out.println("        Use Ports(Client id:port):	"+ Arrays.toString(as.getUsePorts()));
+					System.out.println("                        OS:	"+ OSInfo.getOSArch() + "  " + OSInfo.getOSName() + " V" + OSInfo.getOSVersion());
+					System.out.println("              CPU Core Num:	"+ OSInfo.getProcessorNum());
+					System.out.println("          Total JVM Memory:	"+ OSInfo.getJVMTotalMemorySize() + "M");
+					System.out.println("           Free JVM Memory:	"+ OSInfo.getJVMFreeMemorySize() + "M");
+					System.out.println("                 Server ID:	"+ RoomManager.roomServerId);
+					System.out.println("           Online User Num:	"+ UserManager.size());
+					System.out.println("           Online Room Num:	"+ RoomManager.size());
 					System.out.print("yxgu>");
 				} else if ("?".equals(scmd) || "help".equals(scmd)) {
 					System.out.println("yxgu>	command include:\n" +

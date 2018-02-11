@@ -1,8 +1,11 @@
 package top.yxgu.room.roomScoket;
 
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
@@ -10,7 +13,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import top.yxgu.room.model.RoomData;
+import top.yxgu.room.action.RoomActor;
+import top.yxgu.room.model.ConfigManager;
+import top.yxgu.room.model.RoomManager;
+import top.yxgu.room.model.UserData;
+import top.yxgu.room.model.UserManager;
 import top.yxgu.room.service.RoomService;
 
 @Controller
@@ -26,45 +33,96 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	@Value("${room.server.maxRoomNum}")
 	private int maxRoomNum;
 	
-	@Autowired
+	@Resource
 	private RoomService roomService;
+	
+	@Resource 
+	private RoomSocketClient roomSocketClient;
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		roomSocketClient.channel = ctx.channel();
+		
 		ByteBuf msg = ctx.alloc().buffer();
-		msg.writeShort(1);					//action
+		msg.writeShort(RoomMessageDefine.REGISTER_REQ);		//action
 		byte[] b = host.getBytes();
 		msg.writeShort(b.length);
 		msg.writeBytes(b);					//host
 		msg.writeInt(port);					//port
 		msg.writeInt(maxRoomNum);			//可容纳的最大房间数
+		msg.writeInt(RoomManager.size());
+		msg.writeInt(UserManager.size());
 		ctx.writeAndFlush(msg);
-		log.info("Connect in HallServer.");
+		log.info("Connected to HallServer.");
+	}
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		roomSocketClient.channel = null;
+		ctx.channel().eventLoop().schedule(new Runnable() {
+			@Override
+			public void run() {
+				roomSocketClient.connect();
+			}
+		}, RoomSocketClient.RECONNECT_DELAY, TimeUnit.SECONDS);
 	}
 	
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
 		int action = msg.readShort();
 		switch (action) {
-			case RoomMessageDefine.REGISTER_RES: {
-				
-				break;
-			}
-			case RoomMessageDefine.REQUEST_ROOM_REQ: {
+			case RoomMessageDefine.REQUEST_ROOM_REQ: { // 3
 				int userId = msg.readInt();
 				int type = msg.readInt();
-				RoomData room = roomService.selectOrCreate(type);
+				int roomId = 0;
+				UserData ud = UserManager.get(userId); //已经存在
+				if (ud != null) {
+					if (ud.roomId > 0) {
+						RoomActor ra = RoomManager.get(ud.roomId);
+						if (ra != null && ra.contain(userId)) {
+							roomId = ud.roomId;
+						}
+					}
+				} else {
+					ud = new UserData(userId);//先注册用户通道
+					ud.roomType = type;
+					UserManager.add(ud);
+				}
 				
-				if (room == null) {
+				if (roomId <= 0) {
+					roomId = roomService.selectOrCreate(type, userId);
+				}
+				
+				if (roomId <= 0) {
 					//TODO 发送重新获取房间消息
 				} else {
-					 ByteBuf sndMsg = ctx.alloc().buffer();
-					 sndMsg.writeShort(RoomMessageDefine.REQUEST_ROOM_RES);
-					 sndMsg.writeInt(userId);
-					 sndMsg.writeInt(type);
-					 sndMsg.writeInt(room.id);
-					 ctx.writeAndFlush(msg);
+					ud.roomId = roomId;
+					
+					ByteBuf sndMsg = ctx.alloc().buffer();
+					sndMsg.writeShort(RoomMessageDefine.REQUEST_ROOM_RES);
+					sndMsg.writeInt(RoomManager.roomServerId);
+					sndMsg.writeInt(userId);
+					sndMsg.writeInt(type);
+					sndMsg.writeInt(roomId);
+					sndMsg.writeInt(RoomManager.size());
+					sndMsg.writeInt(UserManager.size());
+					ctx.writeAndFlush(sndMsg);
 				}
+				break;
+			}
+			case RoomMessageDefine.REGISTER_RES: {	// 1
+				int groupId = msg.readInt();
+				int roomServerId = msg.readInt();
+				RoomManager.groupId = groupId;
+				RoomManager.roomServerId = roomServerId;
+				break;
+			}
+			case RoomMessageDefine.SYNC_CONFIG_REQ: { // 2
+				ConfigManager.loadJsonConfig();
+				
+				ByteBuf sndMsg = ctx.alloc().buffer();
+				sndMsg.writeShort(RoomMessageDefine.SYNC_CONFIG_RES);
+				ctx.writeAndFlush(sndMsg);
 				break;
 			}
 			default: {

@@ -33,8 +33,8 @@ public class WebSocketServer {
     public boolean isRunning = false;
 	
 	public void run() {
-		bossGroup = new NioEventLoopGroup(2);
-		workGroup = new NioEventLoopGroup();
+		bossGroup = new NioEventLoopGroup(1);
+		workGroup = new NioEventLoopGroup(2);
 		
 		try {
 			ServerBootstrap server = new ServerBootstrap();

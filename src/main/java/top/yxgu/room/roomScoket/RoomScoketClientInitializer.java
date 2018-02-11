@@ -1,6 +1,7 @@
 package top.yxgu.room.roomScoket;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Component;
 
 import io.netty.channel.ChannelInitializer;
@@ -15,7 +16,7 @@ public class RoomScoketClientInitializer extends ChannelInitializer<SocketChanne
 	private static final int maxFrameLength = 65536;
 	private static final int headerLength = 2;
 	
-	@Autowired
+	@Resource
 	private HallMessageHandler hallMessageHandler;
 	
 	private LengthFieldPrepender lengthFieldPrepender;
