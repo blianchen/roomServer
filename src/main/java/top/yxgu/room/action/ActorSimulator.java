@@ -30,7 +30,7 @@ public abstract class ActorSimulator implements Runnable {
 	
 	public void addAction(ActMsg am) {
 		try {
-			queue.put(am);;		//阻塞
+			queue.put(am);		//阻塞
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

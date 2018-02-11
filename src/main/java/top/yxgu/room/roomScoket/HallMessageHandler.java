@@ -19,6 +19,7 @@ import top.yxgu.room.model.RoomManager;
 import top.yxgu.room.model.UserData;
 import top.yxgu.room.model.UserManager;
 import top.yxgu.room.service.RoomService;
+import top.yxgu.utils.CommonFun;
 
 @Controller
 @Sharable
@@ -26,10 +27,14 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private static final Logger log = LoggerFactory.getLogger(HallMessageHandler.class);
 	
+	@Value("${websocket.server.ssl}")
+	private boolean ssl;
 	@Value("${websocket.server.host}")
 	private String host;
 	@Value("${websocket.server.port}")
 	private int port;
+	@Value("${websocket.server.path}")
+	private String path;
 	@Value("${room.server.maxRoomNum}")
 	private int maxRoomNum;
 	
@@ -45,10 +50,9 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		
 		ByteBuf msg = ctx.alloc().buffer();
 		msg.writeShort(RoomMessageDefine.REGISTER_REQ);		//action
-		byte[] b = host.getBytes();
-		msg.writeShort(b.length);
-		msg.writeBytes(b);					//host
-		msg.writeInt(port);					//port
+		String url = (ssl?"wss://":"ws://") + host + ":" + port + path;
+		CommonFun.writeStr(msg, url);		//url
+//		msg.writeInt(port);					//port
 		msg.writeInt(maxRoomNum);			//可容纳的最大房间数
 		msg.writeInt(RoomManager.size());
 		msg.writeInt(UserManager.size());

@@ -73,6 +73,7 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<Msg> {
 					//TODO 发重新登录消息
 					break;
 				}
+				ud.channel = channel;
 				
 				RoomActor ra = null;
 				if (roomId == 0 && type == 0) {
@@ -85,7 +86,6 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<Msg> {
 					}
 				}
 				if (ra != null) {
-					ud.channel = channel;
 					Attribute<Integer> userIdAttr = channel.attr(UserManager.CH_ID);
 					userIdAttr.setIfAbsent(userId);
 					
@@ -155,7 +155,7 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<Msg> {
 	 
 	 @Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		 cause.printStackTrace();
+		 log.info(cause.toString());
 		 ctx.close();
 	}
 }

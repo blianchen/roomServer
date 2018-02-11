@@ -6,15 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import App.Model.Net.MsgOuterClass.Msg;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
-import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -26,8 +23,8 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 	@Autowired
 	private WebSocketMessageCodec webSocketMessageCodec;
 	
-	private ProtobufEncoder protobufEncoder;
-	private ProtobufDecoder protobufDecoder;
+//	private ProtobufEncoder protobufEncoder;
+//	private ProtobufDecoder protobufDecoder;
 	
 	@Autowired
     private SslContext sslContext;
@@ -39,8 +36,8 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 
 
     public WebSocketServerInitializer() {
-    	protobufEncoder = new ProtobufEncoder();
-    	protobufDecoder = new ProtobufDecoder(Msg.getDefaultInstance());
+//    	protobufEncoder = new ProtobufEncoder();
+//    	protobufDecoder = new ProtobufDecoder(Msg.getDefaultInstance());
     }
 	
 	@Override
@@ -62,8 +59,8 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         
         pipeline.addLast(webSocketMessageCodec);
 //        pipeline.addLast(new LoggingHandler(LogLevel.INFO));
-        pipeline.addLast(protobufEncoder);
-        pipeline.addLast(protobufDecoder);
+//        pipeline.addLast(protobufEncoder);
+//        pipeline.addLast(protobufDecoder);
         
         pipeline.addLast(new IdleStateHandler(readerIdleTimeSeconds, 0, 0));
         pipeline.addLast(clientMessageHandler);
