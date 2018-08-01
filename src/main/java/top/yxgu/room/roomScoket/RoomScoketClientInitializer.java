@@ -9,6 +9,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.timeout.IdleStateHandler;
 
 @Component
 public class RoomScoketClientInitializer extends ChannelInitializer<SocketChannel> {
@@ -31,6 +32,7 @@ public class RoomScoketClientInitializer extends ChannelInitializer<SocketChanne
 		 pipeline.addLast(new LengthFieldBasedFrameDecoder(maxFrameLength, 0, headerLength, 0, headerLength));
 		 pipeline.addLast(lengthFieldPrepender);
 		 
+		 pipeline.addLast(new IdleStateHandler(0, 0, 30));
 		 pipeline.addLast(hallMessageHandler);
 	}
 

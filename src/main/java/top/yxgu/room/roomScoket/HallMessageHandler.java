@@ -13,6 +13,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import top.yxgu.room.action.RoomActor;
 import top.yxgu.room.model.ConfigManager;
 import top.yxgu.room.model.RoomManager;
@@ -43,6 +45,8 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	@Resource 
 	private RoomSocketClient roomSocketClient;
+	
+	private int heartbeatCount = 0;
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -135,6 +139,27 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 	}
 	
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		if (evt instanceof IdleStateEvent) {
+	        IdleStateEvent e = (IdleStateEvent) evt;
+	        if (e.state() == IdleState.ALL_IDLE) {
+	        	handleAllIdle(ctx);
+	        }
+	    }
+	}
+	
+    protected void handleAllIdle(ChannelHandlerContext ctx) {
+		ByteBuf sndMsg = ctx.alloc().buffer();
+		sndMsg.writeShort(RoomMessageDefine.SYNC_ROOM_INF);
+		sndMsg.writeInt(RoomManager.roomServerId);
+		sndMsg.writeInt(RoomManager.size());
+		sndMsg.writeInt(UserManager.size());
+		ctx.writeAndFlush(sndMsg);
+		
+        heartbeatCount++;
+    }
+	
 	 @Override
 	 public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 		 ctx.flush();
@@ -142,7 +167,7 @@ public class HallMessageHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	 
 	 @Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		 cause.printStackTrace();
+		 log.warn(cause.toString());
 		 ctx.close();
 	}
 }
